@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -84,8 +81,10 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     private int ySpeed = -1;
     private Direction previousKey = Direction.UP;
     private final Timer gameTimer;
+    private SnakeFrame frame;
     Random random;
-    public SnakeGame(int width, int height) {
+    public SnakeGame(int width, int height, SnakeFrame frame) {
+        this.frame = frame;
         panelWidth = width;
         tileLength = (double) panelWidth / TILES_X_QUANTITY;
         TILES_Y_QUANTITY = height / (int) tileLength;
@@ -264,14 +263,15 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                 "End game", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 new ImageIcon("images\\snakeIcon.png"),
-                new String[] {"Restart", "End"}, "Restart");
+                new String[] {"Restart", "Menu"}, "Restart");
 
         switch (option) {
             case 0:
                 restartGame();
                 break;
             case 1:
-                System.exit(0);
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                Menu.menu.setVisible(true);
                 break;
         }
     }

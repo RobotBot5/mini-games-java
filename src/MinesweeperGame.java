@@ -4,6 +4,7 @@ import javax.swing.plaf.metal.MetalButtonUI;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -138,8 +139,10 @@ public class MinesweeperGame extends JPanel {
     private final HashSet<Coords> mines = new HashSet<>();
     private Tile[][] tiles;
     private int clearedTiles = 0;
+    private MinesweeperFrame frame;
 
-    public MinesweeperGame(Difficulty difficulty) {
+    public MinesweeperGame(Difficulty difficulty, MinesweeperFrame frame) {
+        this.frame = frame;
         switch (difficulty) {
             case EASY:
                 tilesRowQuantity = 9;
@@ -174,7 +177,6 @@ public class MinesweeperGame extends JPanel {
         for (int i = 0; i < tilesRowQuantity; i++) {
             for (int j = 0; j < tilesColumnQuantity; j++) {
                 var tile = new Tile();
-                System.out.println(tile.getBackground());
                 for (Coords coordsMine : mines) {
                     if (coordsMine.equals(new Coords(i, j))) {
                         tile.setMine(true);
@@ -336,14 +338,15 @@ public class MinesweeperGame extends JPanel {
                 "End game", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 new ImageIcon("images\\mine.png"),
-                new String[] {"Restart", "End"}, "Restart");
+                new String[] {"Restart", "Menu"}, "Restart");
 
         switch (option) {
             case 0:
                 restartGame();
                 break;
             case 1:
-                System.exit(0);
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                Menu.menu.setVisible(true);
                 break;
         }
     }
@@ -357,14 +360,15 @@ public class MinesweeperGame extends JPanel {
                 "End game", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 new ImageIcon("images\\mine.png"),
-                new String[] {"Restart", "End"}, "Restart");
+                new String[] {"Restart", "Menu"}, "Restart");
 
         switch (option) {
             case 0:
                 restartGame();
                 break;
             case 1:
-                System.exit(0);
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                Menu.menu.setVisible(true);
                 break;
         }
     }
