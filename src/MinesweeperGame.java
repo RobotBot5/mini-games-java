@@ -300,38 +300,6 @@ public class MinesweeperGame extends JPanel {
         }
     }
 
-//    private void setCountsIsland(int row, int column, boolean vertical) {
-//        if(!tiles[row][column].isMarked()) {
-//            tiles[row][column].setText(Integer.toString(tiles[row][column].getMineCounts()));
-//            tiles[row][column].setEnabled(false);
-//            tiles[row][column].setBackground(Color.WHITE);
-//        }
-//        if (vertical) {
-//            if(row - 1 != -1 && !tiles[row - 1][column].isMarked()){
-//                tiles[row - 1][column].setText(Integer.toString(tiles[row - 1][column].getMineCounts()));
-//                tiles[row - 1][column].setEnabled(false);
-//                tiles[row - 1][column].setBackground(Color.WHITE);
-//            }
-//            if(row + 1 != tilesRowQuantity && !tiles[row + 1][column].isMarked()) {
-//                tiles[row + 1][column].setText(Integer.toString(tiles[row + 1][column].getMineCounts()));
-//                tiles[row + 1][column].setEnabled(false);
-//                tiles[row + 1][column].setBackground(Color.WHITE);
-//            }
-//        }
-//        else {
-//            if(column - 1 != -1 && !tiles[row][column - 1].isMarked()) {
-//                tiles[row][column - 1].setText(Integer.toString(tiles[row][column - 1].getMineCounts()));
-//                tiles[row][column - 1].setEnabled(false);
-//                tiles[row][column - 1].setBackground(Color.WHITE);
-//            }
-//            if(column + 1 != tilesColumnQuantity && !tiles[row][column + 1].isMarked()) {
-//                tiles[row][column + 1].setText(Integer.toString(tiles[row][column + 1].getMineCounts()));
-//                tiles[row][column + 1].setEnabled(false);
-//                tiles[row][column + 1].setBackground(Color.WHITE);
-//            }
-//        }
-//    }
-
     private void gameOverLose() {
         int option = JOptionPane.showOptionDialog(this,
                 "You lose!",
@@ -413,55 +381,6 @@ public class MinesweeperGame extends JPanel {
                         }
                     }
                 }
-
-                int finalI = i;
-                int finalJ = j;
-                tile.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if(tile.isFlagged()) {
-                            tile.setIcon(null);
-                            tile.setFlagged(false);
-                        }
-                        else if (e.getButton() == MouseEvent.BUTTON3) {
-                            tile.setIcon(new ImageIcon("images\\flag.png"));
-                            tile.setFlagged(true);
-                        }
-                        else {
-                            if (tile.isMine()) {
-                                for(var coords : mines) {
-                                    tiles[coords.getRow()][coords.getColumn()].setBackground(Color.WHITE);
-                                    tiles[coords.getRow()][coords.getColumn()].setIcon(new ImageIcon("images\\mine.png"));
-                                }
-                                tile.setBackground(Color.RED);
-                                gameOverLose();
-                            }
-                            else if (tile.getMineCounts() == 0) {
-                                findIsland(tile, finalI, finalJ);
-                            }
-                            else {
-                                tile.setEnabled(false);
-                                tile.setBackground(Color.WHITE);
-                                tile.setText(Integer.toString(tile.getMineCounts()));
-                                tile.marked();
-                                clearedTiles++;
-                            }
-                        }
-                        boolean isVictory = true;
-                        loop:
-                        for (var tile1 : tiles) {
-                            for (var tile : tile1) {
-                                if(tile.isEnabled() && !tile.isMine()) {
-                                    isVictory = false;
-                                    break loop;
-                                }
-                            }
-                        }
-                        if(isVictory) gameOverVictory();
-//                        if(clearedTiles == tilesColumnQuantity * tilesRowQuantity - minesQuantity) gameOverVictory();
-//                        System.out.println(clearedTiles);
-                    }
-                });
             }
         }
     }
