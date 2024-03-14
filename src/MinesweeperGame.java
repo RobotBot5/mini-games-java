@@ -13,7 +13,6 @@ public class MinesweeperGame extends JPanel {
         private boolean flagged = false;
         private boolean mine = false;
         private int mineCounts = 0;
-        private boolean mark = false;
         private Color numColor;
         public boolean isFlagged() {
             return flagged;
@@ -34,7 +33,6 @@ public class MinesweeperGame extends JPanel {
             mineCounts = 0;
             flagged = false;
             mine = false;
-            mark = false;
             setEnabled(true);
             setBackground(new ColorUIResource(238, 238, 238));
             setIcon(null);
@@ -79,13 +77,6 @@ public class MinesweeperGame extends JPanel {
 
         public int getMineCounts() {
             return mineCounts;
-        }
-        public void marked() {
-            this.mark = true;
-        }
-
-        public boolean isMarked() {
-            return mark;
         }
 
         public Color getNumColor() {
@@ -232,23 +223,11 @@ public class MinesweeperGame extends JPanel {
                                 tile.setEnabled(false);
                                 tile.setBackground(Color.WHITE);
                                 tile.setText(Integer.toString(tile.getMineCounts()));
-                                tile.marked();
                                 clearedTiles++;
                             }
                         }
-                        boolean isVictory = true;
-                        loop:
-                        for (var tile1 : tiles) {
-                            for (var tile : tile1) {
-                                if(tile.isEnabled() && !tile.isMine()) {
-                                    isVictory = false;
-                                    break loop;
-                                }
-                            }
-                        }
-                        if(isVictory) gameOverVictory();
-//                        if(clearedTiles == tilesColumnQuantity * tilesRowQuantity - minesQuantity) gameOverVictory();
-//                        System.out.println(clearedTiles);
+                        if(clearedTiles == tilesColumnQuantity * tilesRowQuantity - minesQuantity) gameOverVictory();
+                        System.out.println(clearedTiles);
                     }
                 });
             }
@@ -259,7 +238,6 @@ public class MinesweeperGame extends JPanel {
         tile.setBackground(Color.WHITE);
         tile.setText("");
         tile.setEnabled(false);
-        tile.marked();
         clearedTiles++;
         if (row - 1 != -1) {
             setTileBlankOrNum(row - 1, column);
@@ -287,13 +265,12 @@ public class MinesweeperGame extends JPanel {
         }
     }
     private void setTileBlankOrNum(int row, int column) {
-        if (tiles[row][column].isMarked()) return;
+        if (!tiles[row][column].isEnabled()) return;
         if (tiles[row][column].getMineCounts() == 0) {
             findIsland(tiles[row][column], row, column);
         }
         else {
             clearedTiles++;
-            tiles[row][column].marked();
             tiles[row][column].setText(Integer.toString(tiles[row][column].getMineCounts()));
             tiles[row][column].setEnabled(false);
             tiles[row][column].setBackground(Color.WHITE);
@@ -344,13 +321,12 @@ public class MinesweeperGame extends JPanel {
     private void restartGame() {
 //        tiles = new Tile[tilesRowQuantity][tilesColumnQuantity];
 //        random = new Random();
+        clearedTiles = 0;
         mines.clear();
         while(mines.size() != minesQuantity) {
             mines.add(new Coords(random.nextInt(tilesRowQuantity), random.nextInt(tilesColumnQuantity)));
         }
 
-
-//        setLayout(new GridLayout(tilesRowQuantity, tilesColumnQuantity));
         for (int i = 0; i < tilesRowQuantity; i++) {
             for (int j = 0; j < tilesColumnQuantity; j++) {
                 var tile = tiles[i][j];
@@ -359,11 +335,8 @@ public class MinesweeperGame extends JPanel {
                 for (Coords coordsMine : mines) {
                     if (coordsMine.equals(new Coords(i, j))) {
                         tile.setMine(true);
-//                        tile.setIcon(new ImageIcon("images\\mine.png"));
                     }
                 }
-//                tiles[i][j] = tile;
-//                add(tile);
             }
         }
 
