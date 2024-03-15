@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 public class Menu extends JFrame{
     private JPanel rootPanel;
     private JButton minesweeperButton;
-    private JButton emptyButton;
+    private JButton tetrisButton;
     private JButton snakeButton;
     private JButton settingsButton;
     private JButton rulesButton;
@@ -34,6 +34,13 @@ public class Menu extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
                 new MinesweeperFrame();
+            }
+        });
+        tetrisButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                new TetrisFrame();
             }
         });
     }
