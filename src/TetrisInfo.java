@@ -6,6 +6,6 @@ public class TetrisInfo extends JPanel {
     public TetrisInfo(TetrisFrame frame) {
         this.frame = frame;
         setBackground(Color.GREEN);
-        setPreferredSize(new Dimension(frame.DEFAULT_WIDTH / 3 - 6, frame.DEFAULT_HEIGHT));
+        setPreferredSize(new Dimension(frame.DEFAULT_WIDTH / 3, frame.DEFAULT_HEIGHT));
     }
 }
