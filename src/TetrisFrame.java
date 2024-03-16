@@ -19,6 +19,6 @@ public class TetrisFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-        new TetrisFrame();
+        EventQueue.invokeLater(TetrisFrame::new);
     }
 }

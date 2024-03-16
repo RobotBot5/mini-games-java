@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,26 +27,26 @@ public class Menu extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
-                new SnakeFrame();
+                EventQueue.invokeLater(SnakeFrame::new);
             }
         });
         minesweeperButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
-                new MinesweeperFrame();
+                EventQueue.invokeLater(MinesweeperFrame::new);
             }
         });
         tetrisButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
-                new TetrisFrame();
+                EventQueue.invokeLater(TetrisFrame::new);
             }
         });
     }
 
     public static void main(String[] args) {
-        new Menu();
+        EventQueue.invokeLater(Menu::new);
     }
 }
