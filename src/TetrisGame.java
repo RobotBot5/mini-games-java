@@ -1,12 +1,12 @@
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 public class TetrisGame extends JPanel implements ActionListener, KeyListener {
 
@@ -19,6 +19,11 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
             setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
             this.row = row;
             this.column = column;
+        }
+
+        public void copyOf(Tile otherTile) {
+            isWall = otherTile.isWall;
+            setBackground(otherTile.getBackground());
         }
     }
 
@@ -489,7 +494,31 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
         }
         else {
             currentSharp.doWall();
+            var rowsToCheck = new PriorityQueue<>(Arrays.stream(currentSharp.sharpTiles)
+                    .map(tile -> tile.row).distinct().toList());
+            while (!rowsToCheck.isEmpty()) {
+                var row = rowsToCheck.remove();
+                boolean clearLine = true;
+                for (int j = 1; j < TILES_COLUMNS_QUANTITY - 1; j++) {
+                    if(!tiles[row][j].isWall) {
+                        clearLine = false;
+                        break;
+                    }
+                }
+                if(clearLine) {
+                    for (int i = row; i >= 2; i--) {
+                        for (int j = 1; j < TILES_COLUMNS_QUANTITY - 1; j++) {
+                            tiles[i][j].copyOf(tiles[i - 1][j]);
+                        }
+                    }
+                    for (int j = 1; j < TILES_COLUMNS_QUANTITY - 1; j++) {
+                        tiles[1][j].isWall = false;
+                        tiles[1][j].setBackground(Color.BLACK);
+                    }
+                }
+            }
             createSharp(SharpChoice.randomSharp());
+//            createSharp(SharpChoice.I);
         }
         repaint();
     }
