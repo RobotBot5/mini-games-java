@@ -4,6 +4,7 @@ import java.awt.*;
 public class TetrisFrame extends JFrame {
     public final int DEFAULT_WIDTH = 540;
     public final int DEFAULT_HEIGHT = 660;
+    public final TetrisInfo tetrisInfo;
     public TetrisFrame() {
         setTitle("Tetris");
         Image img = new ImageIcon("images\\tetris.png").getImage();
@@ -14,7 +15,8 @@ public class TetrisFrame extends JFrame {
         var tetrisGame = new TetrisGame(this);
         add(tetrisGame);
         tetrisGame.requestFocus();
-        add(new TetrisInfo(this));
+        tetrisInfo = new TetrisInfo(this);
+        add(tetrisInfo);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);

@@ -474,6 +474,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
     private Sharp currentSharp;
     private Timer gameTimer;
     private final int GAME_SPEED = 500;
+    private int score = 0;
     public TetrisGame(TetrisFrame frame) {
         this.frame = frame;
         setFocusable(true);
@@ -514,6 +515,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
             currentSharp.doWall();
             var rowsToCheck = new PriorityQueue<>(Arrays.stream(currentSharp.sharpTiles)
                     .map(tile -> tile.row).distinct().toList());
+            int clearLineCount = 0;
             while (!rowsToCheck.isEmpty()) {
                 var row = rowsToCheck.remove();
                 boolean clearLine = true;
@@ -524,6 +526,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     }
                 }
                 if(clearLine) {
+                    clearLineCount++;
                     for (int i = row; i >= 2; i--) {
                         for (int j = 1; j < TILES_COLUMNS_QUANTITY - 1; j++) {
                             tiles[i][j].copyOf(tiles[i - 1][j]);
@@ -535,10 +538,32 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     }
                 }
             }
+            increaseScore(clearLineCount);
+            frame.tetrisInfo.increaseScore(score);
             createSharp(SharpChoice.randomSharp());
 //            createSharp(SharpChoice.I);
         }
         repaint();
+    }
+
+    private void increaseScore(int tetrisCombo) {
+        var sharpChoice = currentSharp.sharpChoice;
+        if (tetrisCombo == 0) {
+            if (sharpChoice == SharpChoice.Z || sharpChoice == SharpChoice.S) {
+                score += 16;
+            }
+            else if (sharpChoice == SharpChoice.J || sharpChoice == SharpChoice.L ||
+                    sharpChoice == SharpChoice.O || sharpChoice == SharpChoice.T) {
+                score += 17;
+            }
+            else if (sharpChoice == SharpChoice.I) {
+                score += 18;
+            }
+        }
+        else if (tetrisCombo == 1) score += 100;
+        else if (tetrisCombo == 2) score += 300;
+        else if (tetrisCombo == 3) score += 700;
+        else if (tetrisCombo == 4) score += 1500;
     }
 
     private void createSharp(SharpChoice sc) {
@@ -579,7 +604,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
 //        System.exit(0);
         gameTimer.stop();
         int option = JOptionPane.showOptionDialog(this,
-                "You loose!",
+                "You loose!\nScore: " + score,
                 "End game", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 new ImageIcon("images\\tetris.png"),
