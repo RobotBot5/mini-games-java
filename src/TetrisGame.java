@@ -2,10 +2,7 @@ import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.*;
 
 public class TetrisGame extends JPanel implements ActionListener, KeyListener {
@@ -54,6 +51,9 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                 case I:
                     columnCenter = 5;
                     color = Color.CYAN;
+                    if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter + 1].isWall ||
+                            tiles[rowCenter][columnCenter - 1].isWall || tiles[rowCenter][columnCenter + 2].isWall)
+                        endGame();
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter + 1]);
                     sharpTiles[2] = (tiles[rowCenter][columnCenter - 1]);
@@ -62,6 +62,9 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                 case J:
                     color = Color.BLUE;
                     columnCenter = 5;
+                    if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter + 1].isWall ||
+                            tiles[rowCenter][columnCenter - 1].isWall || tiles[rowCenter - 1][columnCenter - 1].isWall)
+                        endGame();
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter + 1]);
                     sharpTiles[2] = (tiles[rowCenter][columnCenter - 1]);
@@ -70,6 +73,9 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                 case L:
                     color = new Color(204, 102, 0);
                     columnCenter = 5;
+                    if (tiles[rowCenter][columnCenter + 1].isWall || tiles[rowCenter - 1][columnCenter + 1].isWall ||
+                            tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter - 1].isWall)
+                        endGame();
                     sharpTiles[0] = (tiles[rowCenter][columnCenter + 1]);
                     sharpTiles[1] = (tiles[rowCenter - 1][columnCenter + 1]);
                     sharpTiles[2] = (tiles[rowCenter][columnCenter]);
@@ -77,6 +83,9 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     break;
                 case O:
                     color = Color.YELLOW;
+                    if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter - 1].isWall ||
+                            tiles[rowCenter - 1][columnCenter].isWall || tiles[rowCenter - 1][columnCenter - 1].isWall)
+                        endGame();
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter - 1]);
                     sharpTiles[2] = (tiles[rowCenter - 1][columnCenter]);
@@ -86,6 +95,9 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     color = Color.GREEN;
                     rowCenter = 1;
                     columnCenter = 5;
+                    if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter + 1].isWall ||
+                            tiles[rowCenter + 1][columnCenter].isWall || tiles[rowCenter + 1][columnCenter - 1].isWall)
+                        endGame();
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter + 1]);
                     sharpTiles[2] = (tiles[rowCenter + 1][columnCenter]);
@@ -94,6 +106,9 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                 case T:
                     color = new Color(126, 0, 227);
                     columnCenter = 5;
+                    if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter - 1].isWall ||
+                            tiles[rowCenter - 1][columnCenter].isWall || tiles[rowCenter][columnCenter + 1].isWall)
+                        endGame();
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter - 1]);
                     sharpTiles[2] = (tiles[rowCenter - 1][columnCenter]);
@@ -103,6 +118,9 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     color = Color.RED;
                     rowCenter = 1;
                     columnCenter = 5;
+                    if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter - 1].isWall ||
+                            tiles[rowCenter + 1][columnCenter].isWall || tiles[rowCenter + 1][columnCenter + 1].isWall)
+                        endGame();
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter - 1]);
                     sharpTiles[2] = (tiles[rowCenter + 1][columnCenter]);
@@ -555,6 +573,26 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
             currentSharp.rotateSharp();
             currentSharp.paintSharp(false);
             repaint();
+        }
+    }
+    private void endGame() {
+//        System.exit(0);
+        gameTimer.stop();
+        int option = JOptionPane.showOptionDialog(this,
+                "You loose!",
+                "End game", JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                new ImageIcon("images\\tetris.png"),
+                new String[] {"Restart", "Menu"}, "Restart");
+
+        switch (option) {
+            case 0:
+//                restartGame();
+                break;
+            case 1:
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                Menu.menu.setVisible(true);
+                break;
         }
     }
 

@@ -8,7 +8,7 @@ public class TetrisFrame extends JFrame {
         setTitle("Tetris");
         Image img = new ImageIcon("images\\tetris.png").getImage();
         setIconImage(img);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
         setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         var tetrisGame = new TetrisGame(this);
