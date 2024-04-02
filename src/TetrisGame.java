@@ -4,6 +4,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 public class TetrisGame extends JPanel implements ActionListener, KeyListener {
 
@@ -24,7 +25,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
         }
     }
 
-    private enum SharpChoice {
+    public enum SharpChoice {
         O, I, S, Z, L, J, T;
 
         private static final Random random = new Random();
@@ -475,6 +476,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
     private Timer gameTimer;
     private final int GAME_SPEED = 500;
     private int score = 0;
+    private Queue<SharpChoice> sharpsQueue = new LinkedList<>();
     public TetrisGame(TetrisFrame frame) {
         this.frame = frame;
         setFocusable(true);
@@ -495,6 +497,9 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                 }
                 add(tile);
             }
+        }
+        for (int i = 0; i < 4; i++) {
+            sharpsQueue.add(SharpChoice.randomSharp());
         }
         createSharp(SharpChoice.randomSharp());
 //        currentSharp.paintSharp(false);
@@ -540,7 +545,10 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
             }
             increaseScore(clearLineCount);
             frame.tetrisInfo.increaseScore(score);
-            createSharp(SharpChoice.randomSharp());
+            createSharp(sharpsQueue.remove());
+            sharpsQueue.add(SharpChoice.randomSharp());
+            frame.tetrisInfo.nextBlocksPanel.updateQueue((List<SharpChoice>) sharpsQueue);
+
 //            createSharp(SharpChoice.I);
         }
         repaint();
