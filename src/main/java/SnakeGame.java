@@ -258,9 +258,18 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     private void endGame() {
 //        System.exit(0);
         gameTimer.stop();
+        String message;
+        if(score > Menu.menu.getUser().getSnakeHighScore()) {
+            Menu.menu.getUser().setSnakeHighScore(score);
+            message = "You died!\nYour score: " + score +
+                    "\nNew Highscore!";
+        }
+        else {
+            message = "You died!\nYour score: " + score +
+                    "\nHigh score: " + Menu.menu.getUser().getSnakeHighScore();
+        }
         int option = JOptionPane.showOptionDialog(this,
-                "You died!\nYour score: " + score,
-                "End game", JOptionPane.DEFAULT_OPTION,
+                message, "End game", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 new ImageIcon("images\\snakeIcon.png"),
                 new String[] {"Restart", "Menu"}, "Restart");

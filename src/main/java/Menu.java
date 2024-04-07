@@ -12,6 +12,7 @@ public class Menu extends JFrame{
     private JButton rulesButton;
     private JButton accountButton;
     public static Menu menu;
+    private User user;
 
     public Menu() {
         menu = this;
@@ -44,9 +45,17 @@ public class Menu extends JFrame{
                 EventQueue.invokeLater(TetrisFrame::new);
             }
         });
+
+        String userName = JOptionPane.showInputDialog(null,
+                "Name:", "User", JOptionPane.QUESTION_MESSAGE);
+        user = new User(userName);
     }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(Menu::new);
+    }
+
+    public User getUser() {
+        return user;
     }
 }

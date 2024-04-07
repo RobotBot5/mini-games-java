@@ -300,6 +300,7 @@ public class MinesweeperGame extends JPanel {
         for(var coords : mines) {
             tiles[coords.getRow()][coords.getColumn()].setIcon(new ImageIcon("images\\flag.png"));
         }
+
         int option = JOptionPane.showOptionDialog(this,
                 "You won!",
                 "End game", JOptionPane.DEFAULT_OPTION,

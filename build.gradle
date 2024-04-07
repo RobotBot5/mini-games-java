@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'io.github.file5.guidesigner' version '1.0.2'
+}
+
+group = "com.java-mini-games"
+version = "0.1"
+
+repositories {
+    mavenCentral()
+}
+
+//application {
+//    mainClass.set("Main")
+//}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
+    implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
+    implementation "com.jetbrains.intellij.java:java-gui-forms-rt:+"
+    //noinspection GradlePackageUpdate
+    implementation "com.jgoodies:forms:1.1-preview"
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Menu'
+    }
+}
