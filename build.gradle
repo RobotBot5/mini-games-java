@@ -1,6 +1,8 @@
 plugins {
     id 'java'
+    id 'application'
     id 'io.github.file5.guidesigner' version '1.0.2'
+    id 'com.github.johnrengelman.shadow' version "8.0.0"
 }
 
 group = "com.java-mini-games"
@@ -10,9 +12,9 @@ repositories {
     mavenCentral()
 }
 
-//application {
-//    mainClass.set("Main")
-//}
+application {
+    mainClass = "Menu"
+}
 
 dependencies {
     // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
@@ -20,10 +22,12 @@ dependencies {
     implementation "com.jetbrains.intellij.java:java-gui-forms-rt:+"
     //noinspection GradlePackageUpdate
     implementation "com.jgoodies:forms:1.1-preview"
+    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
+
 }
 
-jar {
-    manifest {
-        attributes 'Main-Class': 'Menu'
-    }
+shadowJar {
+    archivesBaseName = "${project.name}"
+    libsDirName = "${project.name}"
 }
