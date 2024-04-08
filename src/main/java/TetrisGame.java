@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
+/** Панель игры "Тетрис" */
 public class TetrisGame extends JPanel implements ActionListener, KeyListener {
 
     private class Tile extends JPanel {
@@ -24,6 +25,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+    /** Перечисление видов фигур в игре "Тетрис" */
     public enum SharpChoice {
         O, I, S, Z, L, J, T;
 

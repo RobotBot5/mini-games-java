@@ -1,8 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 
+/** Фрейм игры "Тетрис" */
 public class TetrisFrame extends JFrame {
+    /** Ширина фрейма по умолчанию */
     public final int DEFAULT_WIDTH = 540;
+    /** Длина фрейма по умолчанию */
     public final int DEFAULT_HEIGHT = 660;
     public final TetrisInfo tetrisInfo;
     public TetrisFrame() {

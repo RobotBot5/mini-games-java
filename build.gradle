@@ -16,6 +16,13 @@ application {
     mainClass = "Menu"
 }
 
+compileJava {
+    options.warnings = true
+    options.deprecation = true
+    options.compilerArgs += ["-Xlint:all"]
+    options.encoding = 'UTF-8'
+}
+
 dependencies {
     // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
     implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
@@ -30,4 +37,8 @@ dependencies {
 shadowJar {
     archivesBaseName = "${project.name}"
     libsDirName = "${project.name}"
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
 }

@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Properties;
 
+/** Класс меню приложения. Точка входа в приложение */
 public class Menu extends JFrame {
     private JPanel rootPanel;
     private JButton minesweeperButton;
@@ -18,9 +19,12 @@ public class Menu extends JFrame {
     private JButton settingsButton;
     private JButton rulesButton;
     private JButton accountButton;
+    /** Поле, хранящее объект класса Menu*/
     public static Menu menu;
     private User user;
     private PasswordChooser dialog = null;
+
+    /** Конструктор */
 
     public Menu() {
         menu = this;
@@ -86,10 +90,18 @@ public class Menu extends JFrame {
         }
     }
 
+    /**
+     * Функция получения значения поля user
+     * @return возвращает пользователя
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * Точка входа в приложение
+     * @param args - аргументы
+     */
     public static void main(String[] args) {
         EventQueue.invokeLater(Menu::new);
     }

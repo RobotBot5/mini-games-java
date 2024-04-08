@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+/** Фрейм игры "Сапёр" */
 public class MinesweeperFrame extends JFrame {
     public MinesweeperFrame() {
         setTitle("Minesweeper");

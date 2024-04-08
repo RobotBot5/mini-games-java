@@ -3,6 +3,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Queue;
 
+/** Информационная панель игры "Тетрис" */
 public class TetrisInfo extends JPanel {
     private class Tile extends JPanel {
         private int row;

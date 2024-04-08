@@ -6,6 +6,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+/** Панель игры "Змейка" */
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
     private class Tile {

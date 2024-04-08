@@ -1,3 +1,4 @@
+/** Перечисление направлений */
 public enum Direction {
     UP,
     DOWN,

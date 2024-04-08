@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+/** Фрейм игры "Змейка" */
 public class SnakeFrame extends JFrame {
     private static final int DEFAULT_WIDTH = 800;
     private static final int DEFAULT_HEIGHT = 600;

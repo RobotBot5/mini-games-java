@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.util.HashSet;
 import java.util.Random;
 
+/** Панель игры "Сапёр" */
 public class MinesweeperGame extends JPanel {
     private class Tile extends JButton {
         private boolean flagged = false;
@@ -89,6 +90,7 @@ public class MinesweeperGame extends JPanel {
         }
     }
 
+    /** Перечисление разных уровней сложности игр */
     public enum Difficulty {
         EASY,
         MEDIUM,
