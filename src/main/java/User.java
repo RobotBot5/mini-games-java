@@ -1,15 +1,12 @@
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 
 /** Класс пользователя. Поля связываются с базой данных с помощью Hibernate */
 @Entity
 @Table(name = "users_records")
 public class User {
-    /** Идентификатор. */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    /** Имя пользователя. */
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
     /** Пароль пользователя. */
     @Column(name = "password")

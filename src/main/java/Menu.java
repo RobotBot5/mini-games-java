@@ -67,24 +67,7 @@ public class Menu extends JFrame {
         if (dialog == null) dialog = new PasswordChooser();
 
         if (dialog.showDialog(Menu.this, "Connect")) {
-            User u = dialog.getUser();
-            user = u;
-            Properties properties = new Properties();
-            properties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-            properties.put(Environment.URL, "jdbc:mysql://localhost:3306/trpp_project_db");
-            properties.put(Environment.USER, "root");
-            properties.put(Environment.PASS, "178197rVr!");
-
-            SessionFactory sessionFactory = new Configuration()
-                    .setProperties(properties)
-                    .addAnnotatedClass(User.class)
-                    .buildSessionFactory();
-
-            try (Session session = sessionFactory.openSession()) {
-                Transaction transaction = session.beginTransaction();
-                session.save(user);
-                transaction.commit();
-            }
+           user = dialog.getUser();
         }
     }
 
@@ -112,24 +95,82 @@ class PasswordChooser extends JPanel {
     private JButton registerButton;
     private JTextField usernameField;
     private JPasswordField passwordField;
-    private JButton okButton;
+    private JButton loginOkButton;
+    private JButton registerOkButton;
     private boolean ok;
     private JDialog dialog;
     private JTextField newUsernameField;
     private JPasswordField newPasswordField;
+    private User user;
 
     public PasswordChooser() {
         cardLayout = new CardLayout();
         cards = new JPanel(cardLayout);
 
-        okButton = new JButton("Ok");
-        okButton.addActionListener(event -> {
-            ok = true;
-            dialog.setVisible(false);
+        loginOkButton = new JButton("Ok");
+        loginOkButton.addActionListener(event -> {
+            Properties properties = new Properties();
+            properties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
+            properties.put(Environment.URL, "jdbc:mysql://localhost:3306/trpp_project_db");
+            properties.put(Environment.USER, "root");
+            properties.put(Environment.PASS, "178197rVr!");
+
+            SessionFactory sessionFactory = new Configuration()
+                    .setProperties(properties)
+                    .addAnnotatedClass(User.class)
+                    .buildSessionFactory();
+
+            try (Session session = sessionFactory.openSession()) {
+                User existingUser = session.byId(User.class).load(usernameField.getText());
+                if (existingUser != null && existingUser.getPassword().equals(new String(passwordField.getPassword()))) {
+                    user = existingUser;
+                    ok = true;
+                    dialog.setVisible(false);
+                } else {
+                    usernameField.setText("Неверный логин или пароль!");
+                    passwordField.setText("");
+                }
+            }
         });
 
-        var cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(event -> dialog.setVisible(false));
+        registerOkButton = new JButton("Ok");
+        registerOkButton.addActionListener(event -> {
+            Properties properties = new Properties();
+            properties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
+            properties.put(Environment.URL, "jdbc:mysql://localhost:3306/trpp_project_db");
+            properties.put(Environment.USER, "root");
+            properties.put(Environment.PASS, "178197rVr!");
+
+            SessionFactory sessionFactory = new Configuration()
+                    .setProperties(properties)
+                    .addAnnotatedClass(User.class)
+                    .buildSessionFactory();
+
+            try (Session session = sessionFactory.openSession()) {
+                User existingUser = session.byId(User.class).load(newUsernameField.getText());
+                if (existingUser == null) {
+                    Transaction transaction = session.beginTransaction();
+                    User u = new User();
+                    u.setPassword(new String(newPasswordField.getPassword()));
+                    u.setName(newUsernameField.getText());
+
+                    session.save(u);
+                    transaction.commit();
+                    ok = true;
+                    dialog.setVisible(false);
+                }
+                else {
+                    newUsernameField.setText("Такой пользователь уже существует");
+                    newPasswordField.setText("");
+                }
+            }
+        });
+
+        var loginCancelButton = new JButton("Cancel");
+        loginCancelButton.addActionListener(event -> dialog.setVisible(false));
+
+        var registerCancelButton = new JButton("Cancel");
+        registerCancelButton.addActionListener(event -> dialog.setVisible(false));
 
         // Panel for login
         JPanel loginPanel = new JPanel(new GridLayout(3, 1));
@@ -139,8 +180,8 @@ class PasswordChooser extends JPanel {
         loginPanel.add(usernameField);
         loginPanel.add(new JLabel("Пароль:"));
         loginPanel.add(passwordField);
-        loginPanel.add(okButton);
-        loginPanel.add(cancelButton);
+        loginPanel.add(loginOkButton);
+        loginPanel.add(loginCancelButton);
 
         // Panel for registration
         JPanel registerPanel = new JPanel(new GridLayout(3, 1));
@@ -150,8 +191,8 @@ class PasswordChooser extends JPanel {
         registerPanel.add(newUsernameField);
         registerPanel.add(new JLabel("Пароль:"));
         registerPanel.add(newPasswordField);
-        registerPanel.add(okButton);
-        registerPanel.add(cancelButton);
+        registerPanel.add(registerOkButton);
+        registerPanel.add(registerCancelButton);
 
         cards.add(loginPanel, "login");
         cards.add(registerPanel, "register");
@@ -174,9 +215,6 @@ class PasswordChooser extends JPanel {
 
     public User getUser()
     {
-        var user = new User();
-        user.setName(newUsernameField.getText());
-        user.setPassword(new String(newPasswordField.getPassword()));
         return user;
     }
 
