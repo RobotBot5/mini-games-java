@@ -109,18 +109,7 @@ class PasswordChooser extends JPanel {
 
         loginOkButton = new JButton("Ok");
         loginOkButton.addActionListener(event -> {
-            Properties properties = new Properties();
-            properties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-            properties.put(Environment.URL, "jdbc:mysql://localhost:3306/trpp_project_db");
-            properties.put(Environment.USER, "root");
-            properties.put(Environment.PASS, "178197rVr!");
-
-            SessionFactory sessionFactory = new Configuration()
-                    .setProperties(properties)
-                    .addAnnotatedClass(User.class)
-                    .buildSessionFactory();
-
-            try (Session session = sessionFactory.openSession()) {
+            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                 User existingUser = session.byId(User.class).load(usernameField.getText());
                 if (existingUser != null && existingUser.getPassword().equals(new String(passwordField.getPassword()))) {
                     user = existingUser;
@@ -135,18 +124,7 @@ class PasswordChooser extends JPanel {
 
         registerOkButton = new JButton("Ok");
         registerOkButton.addActionListener(event -> {
-            Properties properties = new Properties();
-            properties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-            properties.put(Environment.URL, "jdbc:mysql://localhost:3306/trpp_project_db");
-            properties.put(Environment.USER, "root");
-            properties.put(Environment.PASS, "178197rVr!");
-
-            SessionFactory sessionFactory = new Configuration()
-                    .setProperties(properties)
-                    .addAnnotatedClass(User.class)
-                    .buildSessionFactory();
-
-            try (Session session = sessionFactory.openSession()) {
+            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                 User existingUser = session.byId(User.class).load(newUsernameField.getText());
                 if (existingUser == null) {
                     Transaction transaction = session.beginTransaction();
@@ -156,6 +134,7 @@ class PasswordChooser extends JPanel {
 
                     session.save(u);
                     transaction.commit();
+                    user = u;
                     ok = true;
                     dialog.setVisible(false);
                 }

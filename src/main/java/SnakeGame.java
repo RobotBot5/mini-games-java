@@ -1,9 +1,16 @@
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.Random;
 
 
@@ -261,15 +268,23 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 //        System.exit(0);
         gameTimer.stop();
         String message;
-        if(score > Menu.menu.getUser().getSnakeHighScore()) {
-            Menu.menu.getUser().setSnakeHighScore(score);
-            message = "You died!\nYour score: " + score +
-                    "\nNew Highscore!";
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            User existingUser = session.byId(User.class).load(Menu.menu.getUser().getName());
+            if(score > existingUser.getSnakeHighScore()) {
+                existingUser.setSnakeHighScore(score);
+                Transaction transaction = session.beginTransaction();
+                session.update(existingUser);
+                transaction.commit();
+                message = "You died!\nYour score: " + score +
+                        "\nNew Highscore!";
+            }
+            else {
+                message = "You died!\nYour score: " + score +
+                        "\nHigh score: " + existingUser.getSnakeHighScore();
+            }
         }
-        else {
-            message = "You died!\nYour score: " + score +
-                    "\nHigh score: " + Menu.menu.getUser().getSnakeHighScore();
-        }
+
         int option = JOptionPane.showOptionDialog(this,
                 message, "End game", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
