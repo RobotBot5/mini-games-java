@@ -66,8 +66,6 @@ public class Menu extends JFrame {
 
         if (dialog == null) dialog = new PasswordChooser();
 
-        dialog.setUser(new User());
-
         if (dialog.showDialog(Menu.this, "Connect")) {
             User u = dialog.getUser();
             user = u;
@@ -107,27 +105,22 @@ public class Menu extends JFrame {
     }
 }
 
-class PasswordChooser extends JPanel
-{
-    private JTextField username;
-    private JPasswordField password;
+class PasswordChooser extends JPanel {
+    private CardLayout cardLayout;
+    private JPanel cards;
+    private JButton loginButton;
+    private JButton registerButton;
+    private JTextField usernameField;
+    private JPasswordField passwordField;
     private JButton okButton;
     private boolean ok;
     private JDialog dialog;
+    private JTextField newUsernameField;
+    private JPasswordField newPasswordField;
 
-    public PasswordChooser()
-    {
-        setLayout(new BorderLayout());
-
-        var panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 2));
-        panel.add(new JLabel("User name:"));
-        panel.add(username = new JTextField(""));
-        panel.add(new JLabel("Password:"));
-        panel.add(password = new JPasswordField(""));
-        add(panel, BorderLayout.CENTER);
-
-        // create Ok and Cancel buttons that terminate the dialog
+    public PasswordChooser() {
+        cardLayout = new CardLayout();
+        cards = new JPanel(cardLayout);
 
         okButton = new JButton("Ok");
         okButton.addActionListener(event -> {
@@ -138,22 +131,52 @@ class PasswordChooser extends JPanel
         var cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(event -> dialog.setVisible(false));
 
-        var buttonPanel = new JPanel();
-        buttonPanel.add(okButton);
-        buttonPanel.add(cancelButton);
-        add(buttonPanel, BorderLayout.SOUTH);
-    }
+        // Panel for login
+        JPanel loginPanel = new JPanel(new GridLayout(3, 1));
+        usernameField = new JTextField();
+        passwordField = new JPasswordField();
+        loginPanel.add(new JLabel("Имя пользователя:"));
+        loginPanel.add(usernameField);
+        loginPanel.add(new JLabel("Пароль:"));
+        loginPanel.add(passwordField);
+        loginPanel.add(okButton);
+        loginPanel.add(cancelButton);
 
-    public void setUser(User u)
-    {
-        username.setText(u.getName());
+        // Panel for registration
+        JPanel registerPanel = new JPanel(new GridLayout(3, 1));
+        newUsernameField = new JTextField();
+        newPasswordField = new JPasswordField();
+        registerPanel.add(new JLabel("Новое имя пользователя:"));
+        registerPanel.add(newUsernameField);
+        registerPanel.add(new JLabel("Пароль:"));
+        registerPanel.add(newPasswordField);
+        registerPanel.add(okButton);
+        registerPanel.add(cancelButton);
+
+        cards.add(loginPanel, "login");
+        cards.add(registerPanel, "register");
+
+        loginButton = new JButton("Войти");
+        loginButton.addActionListener(e -> cardLayout.show(cards, "login"));
+        loginButton.setPreferredSize(new Dimension(80, 30));
+
+        registerButton = new JButton("Зарегистрироваться");
+        registerButton.addActionListener(e -> cardLayout.show(cards, "register"));
+        registerButton.setPreferredSize(new Dimension(160, 30));
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(loginButton);
+        buttonPanel.add(registerButton);
+        cards.add(buttonPanel, "init");
+        cardLayout.show(cards, "init");
+        add(cards);
     }
 
     public User getUser()
     {
         var user = new User();
-        user.setName(username.getText());
-        user.setPassword(new String(password.getPassword()));
+        user.setName(newUsernameField.getText());
+        user.setPassword(new String(newPasswordField.getPassword()));
         return user;
     }
 
@@ -172,13 +195,11 @@ class PasswordChooser extends JPanel
         {
             dialog = new JDialog(owner, true);
             dialog.add(this);
-            dialog.getRootPane().setDefaultButton(okButton);
             dialog.pack();
         }
 
-        dialog.setTitle(title);
+        dialog.setTitle("Вход в аккаунт");
         dialog.setVisible(true);
         return ok;
     }
 }
-
