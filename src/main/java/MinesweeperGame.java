@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
 
 /** Панель игры "Сапёр" */
@@ -119,6 +120,11 @@ public class MinesweeperGame extends JPanel {
             if (!(otherObject instanceof Coords)) return false;
             Coords other = (Coords) otherObject;
             return row == other.row && column == other.column;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(row, column);
         }
     }
 

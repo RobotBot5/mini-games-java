@@ -9,7 +9,7 @@ public class MinesweeperFrame extends JFrame {
         setIconImage(img);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
-        add(new MinesweeperGame(MinesweeperGame.Difficulty.MEDIUM, this));
+        add(new MinesweeperGame(MinesweeperGame.Difficulty.EASY, this));
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
