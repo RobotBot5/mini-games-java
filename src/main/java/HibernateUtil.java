@@ -14,7 +14,7 @@ public class HibernateUtil {
             properties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
             properties.put(Environment.URL, "jdbc:mysql://localhost:3306/trpp_project_db");
             properties.put(Environment.USER, "root");
-            properties.put(Environment.PASS, "178197rVr!");
+            properties.put(Environment.PASS, "root");
 
             sessionFactory = new Configuration()
                     .setProperties(properties)
