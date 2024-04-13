@@ -46,8 +46,26 @@ public class Menu extends JFrame {
         minesweeperButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int option = JOptionPane.showOptionDialog(menu,
+                        "Выберете сложность", "Выбор сложности", JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.PLAIN_MESSAGE,
+                        new ImageIcon("images\\mine.png"),
+                        new String[] {"Легкий", "Средний", "Сложный"}, "Средний");
+                MinesweeperGame.Difficulty difficulty = null;
+                switch (option) {
+                    case 0:
+                        difficulty = MinesweeperGame.Difficulty.EASY;
+                        break;
+                    case 1:
+                        difficulty = MinesweeperGame.Difficulty.MEDIUM;
+                        break;
+                    case 2:
+                        difficulty = MinesweeperGame.Difficulty.HARD;
+                        break;
+                }
                 setVisible(false);
-                EventQueue.invokeLater(MinesweeperFrame::new);
+                MinesweeperGame.Difficulty finalDifficulty = difficulty;
+                EventQueue.invokeLater(() -> new MinesweeperFrame(finalDifficulty));
             }
         });
         tetrisButton.addActionListener(new ActionListener() {
