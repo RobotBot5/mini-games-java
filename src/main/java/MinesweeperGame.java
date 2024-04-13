@@ -216,10 +216,12 @@ public class MinesweeperGame extends JPanel {
                                     tiles[coords.getRow()][coords.getColumn()].setIcon(new ImageIcon("images\\mine.png"));
                                 }
                                 tile.setBackground(Color.RED);
+                                repaint();
                                 gameOverLose();
                             }
                             else if (tile.getMineCounts() == 0) {
                                 findIsland(tile, finalI, finalJ);
+                                repaint();
                             }
                             else {
                                 tile.setEnabled(false);
@@ -359,5 +361,6 @@ public class MinesweeperGame extends JPanel {
                 }
             }
         }
+        repaint();
     }
 }
