@@ -42,6 +42,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
 
     private class Sharp {
         private Direction direction = Direction.UP;
+        private boolean endGame;
         private final SharpChoice sharpChoice;
         private int rowCenter;
         private int columnCenter;
@@ -58,7 +59,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     color = Color.CYAN;
                     if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter + 1].isWall ||
                             tiles[rowCenter][columnCenter - 1].isWall || tiles[rowCenter][columnCenter + 2].isWall)
-                        endGame();
+                        this.endGame = true;
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter + 1]);
                     sharpTiles[2] = (tiles[rowCenter][columnCenter - 1]);
@@ -69,7 +70,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     columnCenter = 5;
                     if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter + 1].isWall ||
                             tiles[rowCenter][columnCenter - 1].isWall || tiles[rowCenter - 1][columnCenter - 1].isWall)
-                        endGame();
+                        this.endGame = true;
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter + 1]);
                     sharpTiles[2] = (tiles[rowCenter][columnCenter - 1]);
@@ -80,7 +81,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     columnCenter = 5;
                     if (tiles[rowCenter][columnCenter + 1].isWall || tiles[rowCenter - 1][columnCenter + 1].isWall ||
                             tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter - 1].isWall)
-                        endGame();
+                        this.endGame = true;
                     sharpTiles[0] = (tiles[rowCenter][columnCenter + 1]);
                     sharpTiles[1] = (tiles[rowCenter - 1][columnCenter + 1]);
                     sharpTiles[2] = (tiles[rowCenter][columnCenter]);
@@ -90,7 +91,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     color = Color.YELLOW;
                     if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter - 1].isWall ||
                             tiles[rowCenter - 1][columnCenter].isWall || tiles[rowCenter - 1][columnCenter - 1].isWall)
-                        endGame();
+                        this.endGame = true;
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter - 1]);
                     sharpTiles[2] = (tiles[rowCenter - 1][columnCenter]);
@@ -102,7 +103,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     columnCenter = 5;
                     if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter + 1].isWall ||
                             tiles[rowCenter + 1][columnCenter].isWall || tiles[rowCenter + 1][columnCenter - 1].isWall)
-                        endGame();
+                        this.endGame = true;
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter + 1]);
                     sharpTiles[2] = (tiles[rowCenter + 1][columnCenter]);
@@ -113,7 +114,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     columnCenter = 5;
                     if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter - 1].isWall ||
                             tiles[rowCenter - 1][columnCenter].isWall || tiles[rowCenter][columnCenter + 1].isWall)
-                        endGame();
+                        this.endGame = true;
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter - 1]);
                     sharpTiles[2] = (tiles[rowCenter - 1][columnCenter]);
@@ -125,7 +126,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                     columnCenter = 5;
                     if (tiles[rowCenter][columnCenter].isWall || tiles[rowCenter][columnCenter - 1].isWall ||
                             tiles[rowCenter + 1][columnCenter].isWall || tiles[rowCenter + 1][columnCenter + 1].isWall)
-                        endGame();
+                        this.endGame = true;
                     sharpTiles[0] = (tiles[rowCenter][columnCenter]);
                     sharpTiles[1] = (tiles[rowCenter][columnCenter - 1]);
                     sharpTiles[2] = (tiles[rowCenter + 1][columnCenter]);
@@ -505,6 +506,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
         for (int i = 0; i < 4; i++) {
             sharpsQueue.add(SharpChoice.randomSharp());
         }
+        frame.tetrisInfo.nextBlocksPanel.updateQueue((List<SharpChoice>) sharpsQueue);
         createSharp(SharpChoice.randomSharp());
 //        currentSharp.paintSharp(false);
 //        createSharp(SharpChoice.I);
@@ -579,8 +581,12 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
     }
 
     private void createSharp(SharpChoice sc) {
-        currentSharp = new Sharp(sc);
-        currentSharp.paintSharp(false);
+        var sharp = new Sharp(sc);
+        if (sharp.endGame) endGame();
+        else {
+            currentSharp = new Sharp(sc);
+            currentSharp.paintSharp(false);
+        }
     }
     @Override
     public void keyPressed(KeyEvent e) {
@@ -624,11 +630,11 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
                 Transaction transaction = session.beginTransaction();
                 session.update(existingUser);
                 transaction.commit();
-                message = "You loose!\nYour score: " + score +
+                message = "Game over!\nYour score: " + score +
                         "\nNew Highscore!";
             }
             else {
-                message = "You loose!\nYour score: " + score +
+                message = "Game over!\nYour score: " + score +
                         "\nHigh score: " + existingUser.getTetrisHighScore();
             }
         }
@@ -641,13 +647,39 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
 
         switch (option) {
             case 0:
-//                restartGame();
+                restartGame();
                 break;
             case 1:
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
                 Menu.menu.setVisible(true);
                 break;
         }
+    }
+
+    private void restartGame() {
+        for(int i = 0; i < TILES_ROW_QUANTITY; i++) {
+            for (int j = 0; j < TILES_COLUMNS_QUANTITY; j++) {
+                var tile = tiles[i][j];
+
+                if (!(i == 0 || i == TILES_ROW_QUANTITY - 1 || j == 0 || j == TILES_COLUMNS_QUANTITY - 1)) {
+                    tile.setBackground(Color.BLACK);
+                    tile.isWall = false;
+                }
+            }
+        }
+        score = 0;
+        sharpsQueue.clear();
+        for (int i = 0; i < 4; i++) {
+            sharpsQueue.add(SharpChoice.randomSharp());
+        }
+        createSharp(SharpChoice.randomSharp());
+//        currentSharp.paintSharp(false);
+//        createSharp(SharpChoice.I);
+        repaint();
+        frame.tetrisInfo.increaseScore(score);
+        frame.tetrisInfo.nextBlocksPanel.updateQueue((List<SharpChoice>) sharpsQueue);
+        gameTimer = new Timer(GAME_SPEED, this);
+        gameTimer.start();
     }
 
     @Override

@@ -15,11 +15,11 @@ public class TetrisFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
         setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        tetrisInfo = new TetrisInfo(this);
         var tetrisGame = new TetrisGame(this);
         add(tetrisGame);
-        tetrisGame.requestFocus();
-        tetrisInfo = new TetrisInfo(this);
         add(tetrisInfo);
+        tetrisGame.requestFocus();
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
