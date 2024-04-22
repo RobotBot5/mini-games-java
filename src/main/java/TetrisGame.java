@@ -1,3 +1,6 @@
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
@@ -612,11 +615,28 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
     private void endGame() {
 //        System.exit(0);
         gameTimer.stop();
+        String message;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            User existingUser = session.byId(User.class).load(Menu.menu.getUser().getName());
+            if(score > existingUser.getTetrisHighScore()) {
+                existingUser.setTetrisHighScore(score);
+                Transaction transaction = session.beginTransaction();
+                session.update(existingUser);
+                transaction.commit();
+                message = "You loose!\nYour score: " + score +
+                        "\nNew Highscore!";
+            }
+            else {
+                message = "You loose!\nYour score: " + score +
+                        "\nHigh score: " + existingUser.getTetrisHighScore();
+            }
+        }
+
         int option = JOptionPane.showOptionDialog(this,
-                "You loose!\nScore: " + score,
-                "End game", JOptionPane.DEFAULT_OPTION,
+                message, "End game", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
-                new ImageIcon("images\\tetris.png"),
+                new ImageIcon("images\\tetrisIcon.png"),
                 new String[] {"Restart", "Menu"}, "Restart");
 
         switch (option) {
