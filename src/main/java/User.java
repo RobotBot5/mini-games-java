@@ -1,4 +1,5 @@
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.hibernate.annotations.NaturalId;
 
 /** Класс пользователя. Поля связываются с базой данных с помощью Hibernate */
@@ -15,8 +16,14 @@ public class User {
     @Column(name = "snake")
     private Integer snakeHighScore = 0;
     /** Рекорд пользователя в игре "Сапёр". */
-    @Column(name = "minesweeper")
-    private Integer minesweeperHighScore = 0;
+    @Column(name = "minesweeperEasy")
+    private Integer minesweeperEasyHighScore = Integer.MAX_VALUE;
+
+    @Column(name = "minesweeperMedium")
+    private Integer minesweeperMediumHighScore = Integer.MAX_VALUE;
+
+    @Column(name = "minesweeperHard")
+    private Integer minesweeperHardHighScore = Integer.MAX_VALUE;
     /** Рекорд пользователя в игре "Тетрис". */
     @Column(name = "tetris")
     private Integer tetrisHighScore = 0;
@@ -35,13 +42,19 @@ public class User {
     public String getName() {
         return name;
     }
-    /**
-     * Функция получения значения поля {@link User#minesweeperHighScore}
-     * @return возвращает рекорд пользователя в игре "Сапёр"
-     */
-    public int getMinesweeperHighScore() {
-        return minesweeperHighScore;
+
+    public Integer getMinesweeperEasyHighScore() {
+        return minesweeperEasyHighScore;
     }
+
+    public Integer getMinesweeperMediumHighScore() {
+        return minesweeperMediumHighScore;
+    }
+
+    public Integer getMinesweeperHardHighScore() {
+        return minesweeperHardHighScore;
+    }
+
     /**
      * Функция получения значения поля {@link User#snakeHighScore}
      * @return возвращает рекорд пользователя в игре "Змейка"
@@ -66,14 +79,19 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-    /**
-     * Функция определения поля {@link User#minesweeperHighScore}
-     * @param minesweeperHighScore - рекорд пользователя в игре "Сапёр"
-     */
 
-    public void setMinesweeperHighScore(int minesweeperHighScore) {
-        this.minesweeperHighScore = minesweeperHighScore;
+    public void setMinesweeperEasyHighScore(Integer minesweeperEasyHighScore) {
+        this.minesweeperEasyHighScore = minesweeperEasyHighScore;
     }
+
+    public void setMinesweeperMediumHighScore(Integer minesweeperMediumHighScore) {
+        this.minesweeperMediumHighScore = minesweeperMediumHighScore;
+    }
+
+    public void setMinesweeperHardHighScore(Integer minesweeperHardHighScore) {
+        this.minesweeperHardHighScore = minesweeperHardHighScore;
+    }
+
     /**
      * Функция определения поля {@link User#snakeHighScore}
      * @param snakeHighScore - рекорд пользователя в игре "Змейка"

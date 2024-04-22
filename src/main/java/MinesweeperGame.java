@@ -1,3 +1,6 @@
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.metal.MetalButtonUI;
@@ -5,6 +8,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
@@ -139,9 +143,12 @@ public class MinesweeperGame extends JPanel {
     private Tile[][] tiles;
     private int clearedTiles = 0;
     private MinesweeperFrame frame;
+    private Date startTime;
+    private final Difficulty difficulty;
 
     public MinesweeperGame(Difficulty difficulty, MinesweeperFrame frame) {
         this.frame = frame;
+        this.difficulty = difficulty;
         switch (difficulty) {
             case EASY:
                 tilesRowQuantity = 9;
@@ -234,14 +241,15 @@ public class MinesweeperGame extends JPanel {
                                 tile.setBackground(Color.WHITE);
                                 tile.setText(Integer.toString(tile.getMineCounts()));
                                 clearedTiles++;
+                                System.out.println("count: " + clearedTiles + " row: " + finalI + ", col: " + finalJ);
                             }
                         }
                         if(clearedTiles == tilesColumnQuantity * tilesRowQuantity - minesQuantity) gameOverVictory();
-                        System.out.println(clearedTiles);
                     }
                 });
             }
         }
+        startTime = new Date();
     }
 
     private void findIsland(Tile tile, int row, int column) {
@@ -249,6 +257,7 @@ public class MinesweeperGame extends JPanel {
         tile.setText("");
         tile.setEnabled(false);
         clearedTiles++;
+        System.out.println("count: " + clearedTiles + " row: " + row + ", col: " + column);
         if (row - 1 != -1) {
             setTileBlankOrNum(row - 1, column);
             if (column - 1 != -1) {
@@ -281,6 +290,7 @@ public class MinesweeperGame extends JPanel {
         }
         else {
             clearedTiles++;
+            System.out.println("count: " + clearedTiles + " row: " + row + ", col: " + column);
             tiles[row][column].setText(Integer.toString(tiles[row][column].getMineCounts()));
             tiles[row][column].setEnabled(false);
             tiles[row][column].setBackground(Color.WHITE);
@@ -307,12 +317,57 @@ public class MinesweeperGame extends JPanel {
     }
 
     private void gameOverVictory() {
+        int score = (int) ((new Date().getTime() - startTime.getTime()) / 1000);
+        String time;
+        if (score / 60 == 0) time = score + " seconds";
+        else time = score / 60 + " minutes " + score % 60 + " seconds";
+        String message;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            User existingUser = session.byId(User.class).load(Menu.menu.getUser().getName());
+            int previousScore = 0;
+            switch (difficulty) {
+                case EASY:
+                    previousScore = existingUser.getMinesweeperEasyHighScore();
+                    break;
+                case MEDIUM:
+                    previousScore = existingUser.getMinesweeperMediumHighScore();
+                    break;
+                case HARD:
+                    previousScore = existingUser.getMinesweeperHardHighScore();
+                    break;
+            }
+            if(score < previousScore) {
+                switch (difficulty) {
+                    case EASY:
+                        existingUser.setMinesweeperEasyHighScore(score);
+                        break;
+                    case MEDIUM:
+                        existingUser.setMinesweeperMediumHighScore(score);
+                        break;
+                    case HARD:
+                        existingUser.setMinesweeperHardHighScore(score);
+                        break;
+                }
+                Transaction transaction = session.beginTransaction();
+                session.update(existingUser);
+                transaction.commit();
+                message = "You won!\nYour time: " + time +
+                        "\nNew Highscore!";
+            }
+            else {
+                String bestTime;
+                if (previousScore / 60 == 0) bestTime = previousScore + " seconds";
+                else bestTime = previousScore / 60 + " minutes " + previousScore % 60 + " seconds";
+                message = "You won!\nYour time: " + time +
+                        "\nBest time: " + bestTime;
+            }
+        }
         for(var coords : mines) {
             tiles[coords.getRow()][coords.getColumn()].setIcon(new ImageIcon("images\\flag.png"));
         }
 
         int option = JOptionPane.showOptionDialog(this,
-                "You won!",
+                message,
                 "End game", JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 new ImageIcon("images\\mine.png"),
@@ -367,6 +422,7 @@ public class MinesweeperGame extends JPanel {
                 }
             }
         }
+        startTime = new Date();
         repaint();
     }
 }
