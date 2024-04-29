@@ -1,7 +1,7 @@
-#FROM gradle:8.7-jdk17 as builder
-#WORKDIR /app
-#COPY . /app/.
-#RUN gradle shadowJar -p /app
+FROM gradle:8.7-jdk17 as builder
+WORKDIR /app
+COPY . /app/.
+RUN gradle shadowJar -p /app
 #
 #FROM eclipse-temurin:22-jre
 #RUN apt-get update && \
@@ -14,11 +14,9 @@
 
 FROM ubuntu:20.04
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get -y install default-jre-headless && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get -y install openjdk-17-jdk
+
 WORKDIR /app
-COPY /build/libs/minigames-0.1-all.jar /app/minigames.jar
+COPY --from=builder /app/build/libs/minigames-0.1-all.jar /app/minigames.jar
 
 ENTRYPOINT ["java", "-jar", "/app/minigames.jar"]
