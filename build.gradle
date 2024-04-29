@@ -27,7 +27,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
     implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
     implementation "com.jetbrains.intellij.java:java-gui-forms-rt:+"
-    //noinspection GradlePackageUpdate
+//    noinspection GradlePackageUpdate
     implementation "com.jgoodies:forms:1.1-preview"
     // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
     implementation 'com.mysql:mysql-connector-j:8.3.0'
@@ -35,8 +35,7 @@ dependencies {
 }
 
 shadowJar {
-    archivesBaseName = "${project.name}"
-    libsDirName = "${project.name}"
+    archivesBaseName = "minigames"
 }
 
 javadoc {
