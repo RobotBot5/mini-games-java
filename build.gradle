@@ -21,6 +21,7 @@ compileJava {
     options.deprecation = true
     options.compilerArgs += ["-Xlint:all"]
     options.encoding = 'UTF-8'
+    options.release = 17
 }
 
 dependencies {
