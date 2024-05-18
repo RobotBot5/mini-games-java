@@ -1,11 +1,31 @@
 version: '3.1'
 
 services:
-
+  app:
+    container_name: minigames-app
+    build: .
+    depends_on:
+      - db
+    networks:
+      minigames-postgre-net:
   db:
-    image: mysql
+    container_name: minigamesDb
+    image: postgres
     ports:
-      - "3306:3306"
+      - "5432:5432"
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      POSTGRES_PASSWORD: changemeinprod!
+    networks:
+      minigames-postgre-net:
+
+networks:
+  minigames-postgre-net:
+
+#  db:
+#    image: mysql
+#    ports:
+#      - "3305:3305"
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root

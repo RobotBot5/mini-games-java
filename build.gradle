@@ -31,8 +31,8 @@ dependencies {
 //    noinspection GradlePackageUpdate
     implementation "com.jgoodies:forms:1.1-preview"
     // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
-    implementation 'com.mysql:mysql-connector-j:8.3.0'
-
+//    implementation 'com.mysql:mysql-connector-j:8.3.0'
+    implementation 'org.postgresql:postgresql:42.7.3'
 }
 
 shadowJar {
