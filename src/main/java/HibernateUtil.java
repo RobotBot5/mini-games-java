@@ -16,7 +16,7 @@ public class HibernateUtil {
 //            properties.put(Environment.USER, "root");
 //            properties.put(Environment.PASS, "root");
             properties.put(Environment.DRIVER, "org.postgresql.Driver");
-            properties.put(Environment.URL, "jdbc:postgresql://minigamesDb:5432/postgres");
+            properties.put(Environment.URL, "jdbc:postgresql://localhost:5432/postgres");
             properties.put(Environment.USER, "postgres");
             properties.put(Environment.PASS, "changemeinprod!");
             properties.put(Environment.HBM2DDL_AUTO, "update");

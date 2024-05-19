@@ -16,6 +16,14 @@ import java.util.Random;
 /** Панель игры "Сапёр" */
 public class MinesweeperGame extends JPanel {
     private class Tile extends JButton {
+
+        public Tile() {
+            setFocusPainted(false); // Убирает обводку фокуса
+//            setContentAreaFilled(false); // Убирает заливку контента
+//            setBorderPainted(true); // Оставляет границу кнопки, можно убрать если не нужно
+//            setOpaque(true); // Делает фон непрозрачным
+        }
+
         private boolean flagged = false;
         private boolean mine = false;
         private int mineCounts = 0;
@@ -146,7 +154,16 @@ public class MinesweeperGame extends JPanel {
     private Date startTime;
     private final Difficulty difficulty;
 
+    private final LookAndFeel previousLF = UIManager.getLookAndFeel();
+
     public MinesweeperGame(Difficulty difficulty, MinesweeperFrame frame) {
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         this.frame = frame;
         this.difficulty = difficulty;
         switch (difficulty) {
@@ -225,7 +242,7 @@ public class MinesweeperGame extends JPanel {
                         else {
                             if (tile.isMine()) {
                                 for(var coords : mines) {
-                                    tiles[coords.getRow()][coords.getColumn()].setBackground(Color.WHITE);
+                                    tiles[coords.getRow()][coords.getColumn()].setBackground(Color.DARK_GRAY);
                                     tiles[coords.getRow()][coords.getColumn()].setIcon(new ImageIcon("images\\mine.png"));
                                 }
                                 tile.setBackground(Color.RED);
@@ -249,6 +266,16 @@ public class MinesweeperGame extends JPanel {
                 });
             }
         }
+
+
+        try {
+            UIManager.setLookAndFeel(previousLF);
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        SwingUtilities.updateComponentTreeUI(this);
+
+
         startTime = new Date();
     }
 
@@ -393,6 +420,12 @@ public class MinesweeperGame extends JPanel {
             mines.add(new Coords(random.nextInt(tilesRowQuantity), random.nextInt(tilesColumnQuantity)));
         }
 
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         for (int i = 0; i < tilesRowQuantity; i++) {
             for (int j = 0; j < tilesColumnQuantity; j++) {
                 var tile = tiles[i][j];
@@ -422,6 +455,14 @@ public class MinesweeperGame extends JPanel {
                 }
             }
         }
+
+        try {
+            UIManager.setLookAndFeel(previousLF);
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        SwingUtilities.updateComponentTreeUI(this);
+
         startTime = new Date();
         repaint();
     }

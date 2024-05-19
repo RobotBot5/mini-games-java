@@ -480,7 +480,9 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
     private Sharp currentSharp;
     private Timer gameTimer;
     private final int GAME_SPEED = 500;
+    private int lastSpeed = GAME_SPEED;
     private int score = 0;
+    private int scoreGoalToIncreaseSpeed = 500;
     private Queue<SharpChoice> sharpsQueue = new LinkedList<>();
     public TetrisGame(TetrisFrame frame) {
         this.frame = frame;
@@ -554,6 +556,12 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
             createSharp(sharpsQueue.remove());
             sharpsQueue.add(SharpChoice.randomSharp());
             frame.tetrisInfo.nextBlocksPanel.updateQueue((List<SharpChoice>) sharpsQueue);
+
+            if (score >= scoreGoalToIncreaseSpeed && lastSpeed > 50) {
+                lastSpeed -= 50;
+                gameTimer.setDelay(lastSpeed);
+                scoreGoalToIncreaseSpeed += 500;
+            }
 
 //            createSharp(SharpChoice.I);
         }
@@ -668,6 +676,8 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
             }
         }
         score = 0;
+        lastSpeed = GAME_SPEED;
+        scoreGoalToIncreaseSpeed = 500;
         sharpsQueue.clear();
         for (int i = 0; i < 4; i++) {
             sharpsQueue.add(SharpChoice.randomSharp());
@@ -689,7 +699,7 @@ public class TetrisGame extends JPanel implements ActionListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            gameTimer.setDelay(GAME_SPEED);
+            gameTimer.setDelay(lastSpeed);
         }
     }
 }

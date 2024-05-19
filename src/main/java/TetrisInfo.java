@@ -105,11 +105,13 @@ public class TetrisInfo extends JPanel {
 
     public TetrisInfo(TetrisFrame frame) {
         this.frame = frame;
-        setBackground(Color.DARK_GRAY);
+        setBackground(Color.BLACK);
         setPreferredSize(new Dimension(frame.DEFAULT_WIDTH / 3, frame.DEFAULT_HEIGHT));
         scoreText.setPreferredSize(new Dimension(frame.DEFAULT_WIDTH / 3, 100));
         add(scoreText);
         scoreText.setForeground(Color.WHITE);
+        scoreText.setFont(new Font("Arial", Font.BOLD, 18));
+        scoreText.setHorizontalAlignment(SwingConstants.CENTER);
         nextBlocksPanel = new NextBlocksPanel();
         add(nextBlocksPanel);
     }

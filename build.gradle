@@ -17,15 +17,14 @@ application {
 }
 
 compileJava {
-    options.warnings = true
-    options.deprecation = true
+//    options.warnings = true
+//    options.deprecation = true
     options.compilerArgs += ["-Xlint:all"]
     options.encoding = 'UTF-8'
-    options.release = 17
+//    options.release = 17
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
     implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
     implementation "com.jetbrains.intellij.java:java-gui-forms-rt:+"
 //    noinspection GradlePackageUpdate
@@ -33,6 +32,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
 //    implementation 'com.mysql:mysql-connector-j:8.3.0'
     implementation 'org.postgresql:postgresql:42.7.3'
+    implementation group: 'com.formdev', name: 'flatlaf', version: '3.4.1'
 }
 
 shadowJar {
